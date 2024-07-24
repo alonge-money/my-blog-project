@@ -1,14 +1,41 @@
-{% extends 'blog/base.html'%}
-{% block content %}
-<h1>Blog Post</h1>
-{% if user.is_authenticated%}
-    <h3>Welcome back {{user}}</h3>
-{% else %}
-    <h3>Welcome</h3>
-{% endif %}
-<ol>
+{% extends 'blog/base.html'%} {% block content %}
+<div
+  style="
+    background: linear-gradient(
+      45deg,
+      red,
+      orange,
+      yellow,
+      green,
+      blue,
+      indigo,
+      violet,
+      red
+    );
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+  "
+>
+  <h1>Blog Post</h1>
+  {% if user.is_authenticated%}
+  <h3>Welcome back {{user}}</h3>
+  {% else %}
+  <h3>Welcome</h3>
+  {% endif %}
+  <ol>
     {% for post in posts%}
-        <a href="{% url 'post_detail' post.pk %}"><li><strong>{{post.title}}</strong> by <strong>{{post.author.username}}</strong></li></a>
+    <dv style="padding: 20px">
+      <a
+        href="{% url 'post_detail' post.pk %}"
+        style="font-size: 20px; text-decoration: none"
+        ><li>
+          <strong>{{post.title}}</strong> by
+          <strong>{{post.author.username}}</strong>
+        </li></a
+      >
+    </dv>
     {% endfor %}
-</ol>
-{% endblock %}
+  </ol>
+  {% endblock %}
+</div>

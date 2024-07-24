@@ -1,9 +1,100 @@
-{% extends 'blog/base.html'%}
-{% block content %}
-<h1>Post Detail</h1>
-<h1>Title: {{post.title}}</h1>
-<img src="{{'post.image.url'}}" alt="{{post.title}}">
-<p><Strong>Content:</Strong> {{post.content}}</p>
-<p><strong>Author:</strong> {{post.author.username}}</p>
-<p><strong>Uploaded:</strong> {{post.created_at}}</p>
-{% endblock %}
+<head>
+  <style>
+    a {
+      text-decoration: none;
+      font-size: 20px;
+    }
+    button {
+      font-size: 20px;
+      border-radius: 2px;
+      border: none;
+      padding: 7px;
+    }
+    body {
+      color: blue;
+      background-color: rgb(152, 218, 149);
+    }
+  </style>
+</head>
+{% extends 'blog/base.html'%} {% block content %}
+<div
+  style="
+    background: linear-gradient(
+      45deg,
+      red,
+      orange,
+      yellow,
+      green,
+      blue,
+      indigo,
+      violet,
+      red
+    );
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 20px;
+    padding-left: 20px;
+  "
+>
+  <h1>Post Detail</h1>
+  <h1>Title: {{post.title}}</h1>
+</div>
+<div
+  style="
+    display: flex;
+    background-color: rgb(255, 254, 0);
+    justify-content: space-around;
+    padding: 50px;
+    border-radius: 10px;
+  "
+>
+  <div>
+    <img src="{{post.image.url}}" alt="{{post.title}}" style="width: 400px" />
+  </div>
+
+  <div>
+    <p><strong>Content:</strong> {{post.content}}</p>
+    <p><strong>Author:</strong> {{post.author.username}}</p>
+    <p><strong>Uploaded:</strong> {{post.created_at}}</p>
+    {% if user == post.author %}
+    <a href="{% url 'post_edit' post.pk %}">Edit Post</a>
+
+    <form action="{% url 'post_delete' post.pk%}" method="post">
+      {% csrf_token %} {{form.as_p}}
+      <button type="submit" style="display: inline; margin-top: 20px">
+        delete
+      </button>
+    </form>
+  </div>
+
+  <div>
+    {% endif %}
+    <h3>Comment</h3>
+    <div>
+      {% for comment in comments %}
+      <p>{{comment.comment}} by {{comment.author.username}}</p>
+      {% if user == comment.author%}
+      <form action="{% url 'delete_comment' comment.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete comment</button>
+      </form>
+      {% endif%}
+      <div>
+        {% for reply in comment.replies.all%}
+        <p>{{reply.reply}} by {{reply.author.username}}</p>
+        <form action="{% url 'delete_reply' reply.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Delete Reply</button>
+        </form>
+        {% endfor %}
+      </div>
+      <a href="{% url 'add_reply' comment.pk%}">Reply</a>
+
+      {%endfor%}
+    </div>
+    <a href="{%url 'add_comment' post.pk%}">Add Comment</a>
+
+    {% endblock %}
+  </div>
+</div>

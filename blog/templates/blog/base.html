@@ -1,19 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %} My Blog</title>
-</head>
-<body>
+  </head>
+  <body>
     <nav>
-        <ul style="display: flex; gap: 20px;">
-            <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'signup' %}">Sign up</a>
-            <a href="{% url 'post_create' %}">Create Post</a>
-        </ul>
+      <div
+        style="
+          display: flex;
+          gap: 20px;
+          background-color: rgb(252, 1, 0);
+          height: 50px;
+          padding-top: 30px;
+          justify-content: space-around;
+          border-radius: 20px;
+        "
+      >
+        <a
+          href="{% url 'home' %}"
+          style="font-size: 23px; text-decoration: none"
+          >Home</a
+        >
+        {% if user.is_authenticated %}
+        <a
+          href="{% url 'post_create' %}"
+          style="font-size: 23px; text-decoration: none"
+          >Create Post</a
+        >
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button
+            type="submit"
+            style="
+              font-size: 23px;
+              background-color: red;
+              border: none;
+              color: rgb(85, 26, 145);
+            "
+          >
+            Logout
+          </button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}"  style="font-size: 23px; text-decoration: none">Login</a>
+        <a href="{% url 'signup' %}"  style="font-size: 23px; text-decoration: none">Sign up</a>
+        {% endif %}
+      </div>
     </nav>
-    {% block content %}{% endblock %}  
-</body>
+    {% block content %}{% endblock %}
+  </body>
 </html>
