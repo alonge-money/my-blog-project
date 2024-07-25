@@ -1,18 +1,44 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post,Comment, Reply
-from .forms import PostForm, ReplyForm, CommentForm
+from .forms import PostForm, ReplyForm, CommentForm , SignupForm , LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login , logout as auth_logout
 
-def signup(request):
+def signup( request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('home')      
     else:
-        form = UserCreationForm()
+        form = SignupForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+def login_view( request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                form.add_error(None, 'Invalid username or password')         
+    else:
+        form = LoginForm()
+    return render(request, 'registration/login.html', {'form': form})    
+                 
+def logout_user(request):
+    auth_logout(request)
+    return redirect('login')              
 
 def home(request):
     posts = Post.objects.all()

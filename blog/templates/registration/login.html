@@ -2,10 +2,7 @@
 {% block content %}
 <form action="" method="post">
     {% csrf_token %}
-    <label for="">username:</label><br>
-    <input type="text" id="username" name="username"><br>
-    <label for="">Password:</label><br>
-    <input type="password" id="username" name="password"><br>
+    {{form.as_p}}
     <button type="submit">Login</button>
 </form>
 {% endblock %}
